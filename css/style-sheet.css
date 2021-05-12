@@ -1,0 +1,14 @@
+.container-custom{
+    width: 100%;
+}
+
+.row-custom{
+    margin: 0;
+}
+
+#landing{
+    background-image: url("../images/austin-neill-uHD0uyp79Dg-unsplash.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+}
