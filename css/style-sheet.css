@@ -1,3 +1,11 @@
+body{
+    background-color: #efdfe8;
+}
+
+#homeNav{
+    display: none;
+}
+
 .container-custom{
     width: 100%;
 }
@@ -11,4 +19,9 @@
     background-repeat: no-repeat;
     background-size: cover;
     height: 100vh;
+}
+
+.odd{
+    color: white;
+    background-color: #304a94;
 }
