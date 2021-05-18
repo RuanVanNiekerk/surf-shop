@@ -16,6 +16,16 @@ if($_GET['query'] == 'check session'){
     }
 }
 
+//run if user details are requested
+if($_GET['query'] == 'user details'){
+    if(isset($_SESSION["current_email"])){
+        $name = $_SESSION["current_name"];
+        $surname = $_SESSION["current_Surname"];
+        $email = $_SESSION["current_email"];
+        echo $name.'/'.$surname.'/'.$email;
+    }
+}
+
 //run if Logging out
 if($_GET['query'] == 'log out'){
     session_destroy();
