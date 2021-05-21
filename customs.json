@@ -1,0 +1,13 @@
+{
+    "elements": {},
+    "attributes": {
+        "integrity": {
+            "context": "script"
+        },
+        "@click": {
+            "context": "button"
+        },
+        "v-for": {},
+        "v-bind:src": {}
+    }
+}

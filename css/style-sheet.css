@@ -25,3 +25,7 @@ body{
     color: white;
     background-color: #304a94;
 }
+
+#view_img {
+    max-width: 100%;
+}

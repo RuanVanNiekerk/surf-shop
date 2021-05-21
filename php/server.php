@@ -31,6 +31,61 @@ if($_GET['query'] == 'log out'){
     session_destroy();
 }
 
+//run if to find search options
+if($_GET['query'] == 'search options'){
+    $stmt = $conn->prepare("SELECT name, type FROM users WHERE name OR type LIKE %(?)% Limit 5");
+
+    //set Parameters
+    $search = $_SESSION["current_password"];
+
+    //bind variables to prepared statement
+    $stmt->bind_param("s", $search);
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    // Check if query was successful(not sure why not working)
+    if($result->num_rows > 0){
+        $result = [];
+        $i = 0;
+        while ($row = $result->fetch_assoc()){
+            $result[$i] = $row;
+            $i++;
+        }
+        echo json_encode($result);
+    }else{
+        echo 'Could not find a match';
+    }
+}
+
+//run if UPDATED USER data is submited
+if($object[request_name] == 'userUpdate'){
+    $stmt = $conn->prepare("UPDATE users SET name = (?), surname = (?), email = (?) WHERE email = (?) AND password = (?)");
+
+    //set Parameters
+    $new_name = $object[new_name];
+    $new_surname = $object[new_surname];
+    $new_email = $object[new_email];
+    $current_email = $_SESSION["current_email"];
+    $current_password = $_SESSION["current_password"];
+
+    //bind variables to prepared statement
+    $stmt->bind_param("sssss", $new_name, $new_surname, $new_email, $current_email, $current_password);
+
+    $result = $stmt->execute();// Storing select query in a variable
+    
+    $_SESSION["current_name"] = $new_name;
+    $_SESSION["current_Surname"] = $new_surname;
+    $_SESSION["current_email"] = $new_email;
+    
+    // Check if query was successful(not sure why not working)
+    if($result === TRUE){
+        echo 'Your Account has been Updated!';
+    } else {
+        echo "Error selecting table " . $conn->error;
+    }
+}
+
 //run if SIGN UP data is submited
 if($object[request_name] == 'signUp'){
     $stmt = $conn->prepare("INSERT INTO users (name, surname, email, password) VALUES (?, ?, ?, ?)");
@@ -46,8 +101,7 @@ if($object[request_name] == 'signUp'){
 
     $result = $stmt->execute();// Storing select query in a variable
     
-    echo 'Your Account has been Created!';
-    // Check if query was successful (NOT SURE WHY NOT WORKING)
+    // Check if query was successful
     if($result === TRUE){
         echo 'Your Account has been Created!';
     } else {
@@ -73,6 +127,7 @@ if($object[request_name] == 'logIn'){
             $_SESSION["current_name"] = $row["name"];
             $_SESSION["current_Surname"] = $row["surname"];
             $_SESSION["current_email"] = $row["email"];
+            $_SESSION["current_password"] = $row["password"];
         }
         echo 'You have Logged In';
     }else{
