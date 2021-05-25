@@ -176,38 +176,44 @@ if(document.getElementById("login_button")!= null){
 };
 
 //returns suggestions when typing in search bar
-let search = [];
 function searchOptions(){
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'php/server.php?query=search options');
-    xhr.send(null);
+    //Will not show unless something is typed in the search bar
+    if(document.getElementById("searchBar").value === ""){
+        document.getElementById("livesearch").innerHTML = "";
+    }else{
+        let search = {
+            search_input: document.getElementById("searchBar").value,
+            request_name: 'searchData' 
+        };
 
-    xhr.onreadystatechange = function () {
-    var DONE = 4; // readyState 4 means the request is done.
-    var OK = 200; // status 200 is a successful return.
-    if (xhr.readyState === DONE) {
-        if (xhr.status === OK) {
-            console.log(this.responseText);
-            } else {
-            console.log('Error: ' + xhr.status); // An error occurred during the request.
+                console.log(search);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'php/server.php');
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(search));
+
+        xhr.onreadystatechange = function () {
+        var DONE = 4; // readyState 4 means the request is done.
+        var OK = 200; // status 200 is a successful return.
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+                let returnedData = [];
+                let returnText = "";
+                
+                returnedData = JSON.parse(this.responseText);
+                returnedData.forEach(function(item, index){
+                    let submittedEntry = returnedData[index].product_id;
+                    //submittedEntry = submittedEntry.replace("'", "\\&apos;");
+                    //submittedEntry = submittedEntry.replace('"', '\\&quot;');
+                    
+                    returnText += "<a class = 'searchOption' onclick = 'startSearch("+'"'+submittedEntry+'"'+")'>"+returnedData[index].name+"</a><br/>";
+                    document.getElementById("livesearch").innerHTML = returnText;
+                });
+
+                } else {
+                console.log('Error: ' + xhr.status); // An error occurred during the request.
+                }
             }
-        }
-    };
-};
-
-// google maps script
-initMap();
-function initMap() {
-    // The location
-    const port_elizabeth = { lat: -33.91799, lng: 25.57007 };
-    // The map, centered
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 10,
-        center: port_elizabeth
-    });
-    // The marker, positioned
-    const marker = new google.maps.Marker({
-        position: port_elizabeth,
-        map: map
-    });
+        };
+    }
 };

@@ -31,28 +31,28 @@ if($_GET['query'] == 'log out'){
     session_destroy();
 }
 
-//run if to find search options
-if($_GET['query'] == 'search options'){
-    $stmt = $conn->prepare("SELECT name, type FROM users WHERE name OR type LIKE %(?)% Limit 5");
+//run to find search options
+if($object[request_name] == 'searchData'){
+    $stmt = $conn->prepare("SELECT name, type, product_id FROM products WHERE name LIKE (?) OR type LIKE (?) LIMIT 5");
 
     //set Parameters
-    $search = $_SESSION["current_password"];
+    $search = '%'.$object[search_input].'%';
 
     //bind variables to prepared statement
-    $stmt->bind_param("s", $search);
+    $stmt->bind_param("ss", $search, $search);
     
     $stmt->execute();
     $result = $stmt->get_result();
     
     // Check if query was successful(not sure why not working)
     if($result->num_rows > 0){
-        $result = [];
+        $data = [];
         $i = 0;
         while ($row = $result->fetch_assoc()){
-            $result[$i] = $row;
+            $data[] = $row;
             $i++;
         }
-        echo json_encode($result);
+        echo json_encode($data);
     }else{
         echo 'Could not find a match';
     }
