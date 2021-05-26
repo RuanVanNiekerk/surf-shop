@@ -1,19 +1,19 @@
 <?php
 session_start();
+require ('connectServer.php');
 
 $requestPayload = file_get_contents('php://input');
 $object = json_decode($requestPayload, true);
 
-//run to find search options
-if($object[request_name] == 'searchDataRetrieve'){
-    require_once 'connectServer.php';// Calling the database connection file
-    $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = (?) LIMIT 5");
+//run to process view item
+if($object[request_name] == 'viewItem'){
+    $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = (?)");
 
     //set Parameters
     $search = $object[searchInput];
 
     //bind variables to prepared statement
-    $stmt->bind_param("i", $search);
+    $stmt->bind_param("s", $search);
     
     $stmt->execute();
     $result = $stmt->get_result();

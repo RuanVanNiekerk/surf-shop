@@ -23,8 +23,26 @@ async function fetchData(){
     };
 };
 
+//fetches searched item at endpoint
+try{
+    fetch("php/searchAPI.php/searchResults")
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){
+        //save json response to vue data
+        searchresult = data;
+        console.log(data);
+        for(let i = 0; i <= searchresult.length; i++){
+            prodHTML(i, searchresult, "viewItem");
+        };
+    });
+}catch(error){
+    console.log(error);
+};
+
 //adds product HTML to page
-function prodHTML(index, item = tempProdData){
+function prodHTML(index, item = tempProdData, element = "prodCard"){
                 let newHTML = '<div class="card mb-4 box-shadow">'
                                             +'<div>'
                                                 +'<img class="card-img-top card-top-zoom" id="view_img" src="images/'+item[index].img_url+'" alt="Thumbnail [100%x225]">'
@@ -37,14 +55,14 @@ function prodHTML(index, item = tempProdData){
                                                 +'<div class="d-flex justify-content-between align-items-center">'
                                                     +'<div class="btn-group">'
                                                         +'<button type="button" class="btn btn-sm btn-outline-custom" id="'+item[index].product_id+'" onclick="cartAdd(this.id)">Buy</button>'
-                                                        +'<button type="button" class="btn-2 btn-sm btn-outline-custom" id="'+item[index].prod_id+'" ">View</button>'
+                                                        +'<button type="button" class="btn-2 btn-sm btn-outline-custom" id="'+item[index].product_id+'" onclick="viewItem(this.id)">View</button>'
                                                     +'</div>'
                                                     +'<small class="text-muted price" id="view_price">$'+item[index].price+'</small>'
                                                 +'</div>'
                                             +'</div>'
                                         +'</div>';
 
-                document.getElementById("prodCard").innerHTML += newHTML;
+                document.getElementById(element).innerHTML += newHTML;
             };
 
 //add item to cart
@@ -133,16 +151,16 @@ function getCart(){
     };
 };
 
-//search for item that was clicked on
-function startSearch(item){
+//runs when item view button press
+function viewItem(item){
     let submittedEntry = {
-        item: item,
-        request_name: "search"
+        searchInput: item,
+        request_name: "viewItem"
     };
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'php/productSearch.php');
-    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send(submittedEntry);
+    xhr.open('POST', 'php/viewProduct.php');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify(submittedEntry));
 
     xhr.onreadystatechange = function () {
         var DONE = 4; // readyState 4 means the request is done.
@@ -150,15 +168,39 @@ function startSearch(item){
         if (xhr.readyState === DONE) {
             if (xhr.status === OK) {
                 //save json response to vue data
-                    searchresult = data;
-                    document.getElementById("prodCard").innerHTML = "";
-                    for(let i = 0; i <= searchresult.length; i++){
-                    prodHTML(i, searchresult);
+                    searchresult = JSON.parse(this.responseText);
+                    document.location.href = "product.html";
                 };
                 
             } else {
                 console.log('Error: ' + xhr.status); // An error occurred during the request.
             }
-        }
+        };
     };
-};
+
+//search for item that was clicked on
+function startSearch(item){
+    let submittedEntry = {
+        searchInput: item,
+        request_name: "searchDataRetrieve"
+    };
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'php/productSearch.php');
+    xhr.setRequestHeader("Content-type", "application/json");
+    xhr.send(JSON.stringify(submittedEntry));
+
+    xhr.onreadystatechange = function () {
+        var DONE = 4; // readyState 4 means the request is done.
+        var OK = 200; // status 200 is a successful return.
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+                //save json response to vue data
+                    searchresult = JSON.parse(this.responseText);
+                    document.location.href = "product.html";
+                };
+                
+            } else {
+                console.log('Error: ' + xhr.status); // An error occurred during the request.
+            };
+        };
+    };

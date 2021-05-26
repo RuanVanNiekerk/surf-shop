@@ -201,6 +201,9 @@ function searchOptions(){
                 let returnText = "";
                 
                 returnedData = JSON.parse(this.responseText);
+                for (i = 0; i <= 5; i++) {
+                    console.log(returnedData[i]);
+                } 
                 returnedData.forEach(function(item, index){
                     let submittedEntry = returnedData[index].product_id;
                     //submittedEntry = submittedEntry.replace("'", "\\&apos;");
