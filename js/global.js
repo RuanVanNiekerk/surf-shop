@@ -32,29 +32,27 @@ function logOut(){
     xhr.send(null);
 };
 
-//Displays login options based on user login status
-if(document.getElementById("detailsResponse")!= null){
-        window.addEventListener("load", function() {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'php/server.php?query=user details');
-        xhr.send(null);
-        
-        xhr.onreadystatechange = function () {
-        var DONE = 4; // readyState 4 means the request is done.
-        var OK = 200; // status 200 is a successful return.
-        if (xhr.readyState === DONE) {
-            if (xhr.status === OK) {
-                let response = this.responseText;
-                let values = response.split("/");
-                document.getElementById("detailsResponse").innerHTML = 'Name: '+values[0]+'<br/>\n\
-                Surname: '+values[1]+'<br/>\n\
-                Email: '+values[2]+'';
-                } else {
-                console.log('Error: ' + xhr.status); // An error occurred during the request.
-                }
-            }
-    };
+//fetches user Details from endpoint
+try{
+    fetch("php/userAPI.php/user")
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(data){
+        //save json response to vue data
+        searchresult = JSON.stringify(data);
+        for(let i = 0; i <= searchresult.length; i++){
+            document.getElementById("detailsResponse").innerHTML = 'Name: '+data["name"]+'<br/>\n\
+                Surname: '+data["surname"]+'<br/>\n\
+                Email: '+data["email"]+'<br/>\n\
+                Address: '+data["address"]+'<br/>\n\
+                Country: '+data["country"]+'<br/>\n\
+                State: '+data["state"]+'<br/>\n\
+                Zip Code: '+data["zip"]+'';
+        };
     });
+}catch(error){
+    console.log(error);
 };
 
 //Changes profile data into update form
@@ -179,6 +177,7 @@ if(document.getElementById("login_button")!= null){
 function searchOptions(){
     //Will not show unless something is typed in the search bar
     if(document.getElementById("searchBar").value === ""){
+        document.getElementById("livesearch").style.display = "block";
         document.getElementById("livesearch").innerHTML = "";
     }else{
         let search = {
@@ -209,7 +208,7 @@ function searchOptions(){
                     //submittedEntry = submittedEntry.replace("'", "\\&apos;");
                     //submittedEntry = submittedEntry.replace('"', '\\&quot;');
                     
-                    returnText += "<a class = 'searchOption' onclick = 'startSearch("+'"'+submittedEntry+'"'+")'>"+returnedData[index].name+"</a><br/>";
+                    returnText += "<a class = 'searchOption' onclick = 'startSearch("+submittedEntry+")'>"+returnedData[index].name+"</a><br/>";
                     document.getElementById("livesearch").innerHTML = returnText;
                 });
 
@@ -219,4 +218,53 @@ function searchOptions(){
             }
         };
     }
+};
+
+//sends a query to the server
+function sendQuery(){
+    let query = {
+        name: document.getElementById("name").innerHTML,
+        email: document.getElementById("email").innerHTML,
+        subject: document.getElementById("subject").innerHTML,
+        message: document.getElementById("message").innerHTML,
+        request_name: 'query' 
+    };
+    
+    var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'php/server.php');
+        xhr.setRequestHeader("Content-type", "application/json");
+        xhr.send(JSON.stringify(query));
+
+        xhr.onreadystatechange = function () {
+        var DONE = 4; // readyState 4 means the request is done.
+        var OK = 200; // status 200 is a successful return.
+        if (xhr.readyState === DONE) {
+            if (xhr.status === OK) {
+                let returnedData = [];
+                let returnText = "";
+                
+                console.log(JSON.parse(this.responseText));
+                };
+
+                } else {
+                console.log('Error: ' + xhr.status); // An error occurred during the request.
+                }
+        };
+};
+
+// google maps script
+initMap();
+function initMap() {
+    // The location of Uluru
+    const port_elizabeth = { lat: -33.91799, lng: 25.57007 };
+    // The map, centered at Uluru
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: port_elizabeth,
+    });
+    // The marker, positioned at Uluru
+    const marker = new google.maps.Marker({
+        position: port_elizabeth,
+        map: map,
+    });
 };

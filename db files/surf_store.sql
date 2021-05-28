@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 25, 2021 at 04:00 AM
+-- Generation Time: May 28, 2021 at 05:45 AM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1
 
@@ -21,6 +21,27 @@ SET time_zone = "+00:00";
 --
 -- Database: `surf_store`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `address`
+--
+
+CREATE TABLE `address` (
+  `user_id` int(11) NOT NULL,
+  `address` varchar(244) NOT NULL,
+  `country` varchar(244) NOT NULL,
+  `state` varchar(244) NOT NULL,
+  `zip` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `address`
+--
+
+INSERT INTO `address` (`user_id`, `address`, `country`, `state`, `zip`) VALUES
+(11, 'test', 'test', 'test', 1010);
 
 -- --------------------------------------------------------
 
@@ -57,6 +78,20 @@ INSERT INTO `products` (`product_id`, `type`, `name`, `description`, `price`, `s
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `queries`
+--
+
+CREATE TABLE `queries` (
+  `query_id` int(11) NOT NULL,
+  `name` varchar(244) NOT NULL,
+  `email` varchar(244) NOT NULL,
+  `subject` varchar(244) NOT NULL,
+  `message` varchar(244) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `users`
 --
 
@@ -81,10 +116,22 @@ INSERT INTO `users` (`user_id`, `name`, `surname`, `email`, `password`) VALUES
 --
 
 --
+-- Indexes for table `address`
+--
+ALTER TABLE `address`
+  ADD PRIMARY KEY (`user_id`);
+
+--
 -- Indexes for table `products`
 --
 ALTER TABLE `products`
   ADD PRIMARY KEY (`product_id`);
+
+--
+-- Indexes for table `queries`
+--
+ALTER TABLE `queries`
+  ADD PRIMARY KEY (`query_id`);
 
 --
 -- Indexes for table `users`

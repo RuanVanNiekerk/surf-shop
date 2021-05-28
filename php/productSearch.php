@@ -7,13 +7,20 @@ $object = json_decode($requestPayload, true);
 //run to find search options
 if($object[request_name] == 'searchDataRetrieve'){
     require_once 'connectServer.php';// Calling the database connection file
-    $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = (?) LIMIT 5");
+    if(is_int($object[searchInput])){
+        $stmt = $conn->prepare("SELECT * FROM products WHERE product_id = (?) LIMIT 5");
 
-    //set Parameters
-    $search = $object[searchInput];
+        //set Parameters
+        $search = $object[searchInput];
+    }else{
+        $stmt = $conn->prepare("SELECT * FROM products WHERE name LIKE (?) LIMIT 5");
+
+        //set Parameters
+        $search = "%".$object[searchInput]."%";
+    }
 
     //bind variables to prepared statement
-    $stmt->bind_param("i", $search);
+    $stmt->bind_param("s", $search);
     
     $stmt->execute();
     $result = $stmt->get_result();

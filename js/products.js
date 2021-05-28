@@ -43,27 +43,44 @@ try{
 
 //adds product HTML to page
 function prodHTML(index, item = tempProdData, element = "prodCard"){
-                let newHTML = '<div class="card mb-4 box-shadow">'
-                                            +'<div>'
-                                                +'<img class="card-img-top card-top-zoom" id="view_img" src="images/'+item[index].img_url+'" alt="Thumbnail [100%x225]">'
-                                            +'</div>'
-                                            +'<div class="card-body card-body-zoom">'
-                                                +'<h3 id="view_name">'+item[index].name+'</h3>'
-                                                +'<p class="card-text" id="view_desc">'+item[index].description+'</p>'
-                                            +'</div>'
-                                            +'<div class="card-footer">'
-                                                +'<div class="d-flex justify-content-between align-items-center">'
-                                                    +'<div class="btn-group">'
-                                                        +'<button type="button" class="btn btn-sm btn-outline-custom" id="'+item[index].product_id+'" onclick="cartAdd(this.id)">Buy</button>'
-                                                        +'<button type="button" class="btn-2 btn-sm btn-outline-custom" id="'+item[index].product_id+'" onclick="viewItem(this.id)">View</button>'
-                                                    +'</div>'
-                                                    +'<small class="text-muted price" id="view_price">$'+item[index].price+'</small>'
-                                                +'</div>'
-                                            +'</div>'
-                                        +'</div>';
+    if(element == "viewItem"){
+        let newHTML =   '<div class="row p-2 bg-white border rounded">'
+                            +'<div class="col-md-12 mt-1"><img class="img-fluid img-responsive rounded product-image" src="images/'+item[index].img_url+'"></div>'
+                            +'<div class="col-md-12 mt-1">'
+                                +'<h2>'+item[index].name+'</h2>'
+                                +'<p class="text-justify text-truncate para mb-0">'+item[index].description+'<br><br></p>'
+                            +'</div>'
+                            +'<div class="align-items-center align-content-center col-md-12 border-left mt-1">'
+                                +'<div class="d-flex flex-row align-items-center">'
+                                    +'<h4 class="mr-1">$'+item[index].price+'</h4>'
+                                +'</div>'
+                                +'<h6 class="text-success">Free shipping</h6>'
+                                +'<div class="d-flex flex-column mt-4"><button class="btn btn-primary btn-sm" type="button" id="'+item[index].product_id+'" onclick="cartAdd(this.id)">Add to Cart</button>'
+                                +'<button class="btn btn-outline-primary btn-sm mt-2" type="button" id="'+item[index].product_id+'" onclick="viewItem(this.id)">View Item</button></div>'
+                            +'</div>'
+                        +'</div>';
 
-                document.getElementById(element).innerHTML += newHTML;
-            };
+        document.getElementById(element).innerHTML += newHTML;
+    }else{
+        let newHTML =   '<div class="row p-2 bg-white border rounded">'
+                            +'<div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image" src="images/'+item[index].img_url+'"></div>'
+                            +'<div class="col-md-6 mt-1">'
+                                +'<h5>'+item[index].name+'</h5>'
+                                +'<p class="text-justify text-truncate para mb-0">'+item[index].description+'<br><br></p>'
+                            +'</div>'
+                            +'<div class="align-items-center align-content-center col-md-3 border-left mt-1">'
+                                +'<div class="d-flex flex-row align-items-center">'
+                                    +'<h4 class="mr-1">$'+item[index].price+'</h4>'
+                                +'</div>'
+                                +'<h6 class="text-success">Free shipping</h6>'
+                                +'<div class="d-flex flex-column mt-4"><button class="btn btn-primary btn-sm" type="button" id="'+item[index].product_id+'" onclick="cartAdd(this.id)">Add to Cart</button>'
+                                +'<button class="btn btn-outline-primary btn-sm mt-2" type="button" id="'+item[index].product_id+'" onclick="viewItem(this.id)">View Item</button></div>'
+                            +'</div>'
+                        +'</div>';
+
+        document.getElementById(element).innerHTML += newHTML;
+    }       
+};
 
 //add item to cart
 function cartAdd(prodID){
@@ -128,7 +145,7 @@ function cartRemove(ID){
     };
 }
 
-//closes session, logging the current user out
+//gets the cart content from the server
 function getCart(){
     var xhr = new XMLHttpRequest();
     xhr.open('GET', 'php/cart.php?query=getCart');
@@ -140,9 +157,21 @@ function getCart(){
             if (xhr.status === OK) {
                 let result = JSON.parse(this.responseText);
                 cart = result;
+                cart.price = 0;
                 console.log(cart);
                 for(let i = 0; i <= cart.length; i++){
-                    document.getElementById("cartInventory").innerHTML += "<p>"+cart[i].name+"</p><button onclick=\"cartRemove("+i+")\">Remove</button><br/>";
+                    let newPrice = cart.price + + cart[i].price;
+                    cart.price = newPrice;
+                    document.getElementById("cartInventory").innerHTML +=   '<li class="list-group-item d-flex justify-content-between lh-condensed">'
+                                                                                    +'<div>'
+                                                                                        +'<h6 class="my-0">'+cart[i].name+'</h6>'
+                                                                                        +'<small class="text-muted">'+cart[i].description+'</small>'
+                                                                                    +'</div>'
+                                                                                    +'<span class="text-muted">$'+cart[i].price+'</span>'
+                                                                                    +'<a href="" onclick="cartRemove('+i+')">Remove</a>'
+                                                                              +'</li>';
+                    document.getElementById("finalTotal").innerHTML = "$"+cart.price;
+                    document.getElementById("cartAmount").innerHTML = cart.length;
                 }
                 } else {
                 console.log('Error: ' + xhr.status); // An error occurred during the request.
@@ -204,3 +233,14 @@ function startSearch(item){
             };
         };
     };
+    
+function stringSearch(){
+    searchString = document.getElementById("searchbar").value;
+    startSearch(searchString);
+    window.alert("yes");
+}
+document.getElementById("searchButton").addEventListener("click", function(){
+    searchString = document.getElementById("searchbar").value;
+    startSearch(searchString);
+    window.alert("yes");
+});

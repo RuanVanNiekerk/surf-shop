@@ -7,9 +7,9 @@ $object = json_decode($requestPayload, true);
 
 //run if session is being checked
 if($_GET['query'] == 'check session'){
-    if(isset($_SESSION["current_email"])){
-        $name = $_SESSION["current_name"];
-        $surname = $_SESSION["current_Surname"];
+    if(isset($_SESSION["current_user"]["email"])){
+        $name = $_SESSION["current_user"]["name"];
+        $surname = $_SESSION["current_user"]["surname"];
         echo '<li><a href="userProfile.html">'.$name.' '.$surname.'</a></li> <li><a href="index.html" onclick="logOut()">Log Out</a></li>';
     }else{
         echo'<li><a href="signUp.html">Sign Up</a></li> <li><a href="logIn.html">Log In</a></li>';
@@ -111,7 +111,7 @@ if($object[request_name] == 'signUp'){
 
 //run if LOG IN data is submited
 if($object[request_name] == 'logIn'){
-    $stmt = $conn->prepare("SELECT name, surname, email, password FROM users WHERE email = (?) AND password = (?)");
+    $stmt = $conn->prepare("SELECT name, surname, email, password, address, country, state, zip FROM users INNER JOIN address ON users.user_id = address.user_id WHERE email = (?) AND password = (?)");
 
     //set Parameters
     $email = $object[login_email];
@@ -124,13 +124,40 @@ if($object[request_name] == 'logIn'){
     $result = $stmt->get_result();
     if($result->num_rows > 0){
         while ($row = $result->fetch_assoc()){
-            $_SESSION["current_name"] = $row["name"];
-            $_SESSION["current_Surname"] = $row["surname"];
-            $_SESSION["current_email"] = $row["email"];
-            $_SESSION["current_password"] = $row["password"];
+            $_SESSION["current_user"]["name"] = $row["name"];
+            $_SESSION["current_user"]["surname"] = $row["surname"];
+            $_SESSION["current_user"]["email"] = $row["email"];
+            $_SESSION["current_user"]["address"] = $row["address"];
+            $_SESSION["current_user"]["country"] = $row["country"];
+            $_SESSION["current_user"]["state"] = $row["state"];
+            $_SESSION["current_user"]["zip"] = $row["zip"];
         }
         echo 'You have Logged In';
     }else{
         echo 'Failed to Log In';
+    }
+}
+
+//run to insert query
+if($object[request_name] == 'searchData'){
+    $stmt = $conn->prepare("INSERT INTO queries (name, email, subject, message) VALUES (?, ?, ?, ?)");
+
+    //set Parameters
+    $name = $object[name];
+    $email = $object[email];
+    $subject = $object[subject];
+    $message = $object[message];
+
+    //bind variables to prepared statement
+    $stmt->bind_param("ssss", $name, $email, $subject, $message);
+    
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    // Check if query was successful(not sure why not working)
+    if($result->num_rows > 0){
+        echo 'submitted';
+    }else{
+        echo 'Could not find a match';
     }
 }
