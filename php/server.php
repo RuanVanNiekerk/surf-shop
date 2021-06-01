@@ -7,12 +7,12 @@ $object = json_decode($requestPayload, true);
 
 //run if session is being checked
 if($_GET['query'] == 'check session'){
-    if(isset($_SESSION["current_user"]["email"])){
+    if(isset($_SESSION["current_user"]["email"])&&$_SESSION["current_user"]["email"]!==null){
         $name = $_SESSION["current_user"]["name"];
         $surname = $_SESSION["current_user"]["surname"];
-        echo '<li><a href="userProfile.html">'.$name.' '.$surname.'</a></li> <li><a href="index.html" onclick="logOut()">Log Out</a></li>';
+        echo '<li><a href="userProfile.html">'.$name.' '.$surname.'</a></li> <li><a href="index.html" v-on:click="logOut()">Log Out</a></li>';
     }else{
-        echo'<li><a href="signUp.html">Sign Up</a></li> <li><a href="logIn.html">Log In</a></li>';
+        echo'<li><a href="signUp.html">Sign Up</a></li> <li><a href="logIn.html" v-on:click="logOut()">Log In</a></li>';
     }
 }
 
@@ -33,6 +33,10 @@ if($_GET['query'] == 'log out'){
 
 //run to find search options
 if($object[request_name] == 'searchData'){
+    $_SESSION["searchOptions"] = array(
+        "name" => "NO"
+    );
+    
     $stmt = $conn->prepare("SELECT name, type, product_id FROM products WHERE name LIKE (?) OR type LIKE (?) LIMIT 5");
 
     //set Parameters
@@ -44,7 +48,7 @@ if($object[request_name] == 'searchData'){
     $stmt->execute();
     $result = $stmt->get_result();
     
-    // Check if query was successful(not sure why not working)
+    // Check if query was successful
     if($result->num_rows > 0){
         $data = [];
         $i = 0;
@@ -52,7 +56,8 @@ if($object[request_name] == 'searchData'){
             $data[] = $row;
             $i++;
         }
-        echo json_encode($data);
+        $_SESSION["searchOptions"] = $data;
+        echo 'Success';
     }else{
         echo 'Could not find a match';
     }
@@ -139,7 +144,7 @@ if($object[request_name] == 'logIn'){
 }
 
 //run to insert query
-if($object[request_name] == 'searchData'){
+if($object[request_name] == ''){
     $stmt = $conn->prepare("INSERT INTO queries (name, email, subject, message) VALUES (?, ?, ?, ?)");
 
     //set Parameters

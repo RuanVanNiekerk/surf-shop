@@ -8,6 +8,9 @@
             "context": "button"
         },
         "v-for": {},
+        "v-on:keyup": {
+            "context": "input"
+        },
         "v-bind:src": {}
     }
 }
