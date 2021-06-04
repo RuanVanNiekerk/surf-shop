@@ -10,24 +10,14 @@ if($_GET['query'] == 'check session'){
     if(isset($_SESSION["current_user"]["email"])&&$_SESSION["current_user"]["email"]!==null){
         $name = $_SESSION["current_user"]["name"];
         $surname = $_SESSION["current_user"]["surname"];
-        echo '<li><a href="userProfile.html">'.$name.' '.$surname.'</a></li> <li><a href="index.html" v-on:click="logOut()">Log Out</a></li>';
-    }else{
-        echo'<li><a href="signUp.html">Sign Up</a></li> <li><a href="logIn.html" v-on:click="logOut()">Log In</a></li>';
-    }
-}
-
-//run if user details are requested
-if($_GET['query'] == 'user details'){
-    if(isset($_SESSION["current_email"])){
-        $name = $_SESSION["current_name"];
-        $surname = $_SESSION["current_Surname"];
-        $email = $_SESSION["current_email"];
-        echo $name.'/'.$surname.'/'.$email;
+        $return[0] = $name;
+        $return[1] = $surname;
+        echo json_encode($return);
     }
 }
 
 //run if Logging out
-if($_GET['query'] == 'log out'){
+if($_GET['query'] == 'logOut'){
     session_destroy();
 }
 
@@ -63,19 +53,24 @@ if($object[request_name] == 'searchData'){
     }
 }
 
-//run if UPDATED USER data is submited
+//run if UPDATED USER data is submitted
 if($object[request_name] == 'userUpdate'){
-    $stmt = $conn->prepare("UPDATE users SET name = (?), surname = (?), email = (?) WHERE email = (?) AND password = (?)");
+    $stmt = $conn->prepare("UPDATE users, address SET users.name = (?), users.surname = (?), users.email = (?), address.address = (?),"
+            . " address.country = (?), address.state = (?), address.zip = (?) WHERE users.user_id = address.user_id AND users.email = (?) AND users.password = (?)");
 
     //set Parameters
     $new_name = $object[new_name];
     $new_surname = $object[new_surname];
     $new_email = $object[new_email];
+    $new_address = $object[new_address];
+    $new_country = $object[new_country];
+    $new_state = $object[new_state];
+    $new_zip = $object[new_zip];
     $current_email = $_SESSION["current_email"];
     $current_password = $_SESSION["current_password"];
 
     //bind variables to prepared statement
-    $stmt->bind_param("sssss", $new_name, $new_surname, $new_email, $current_email, $current_password);
+    $stmt->bind_param("sssssssss", $new_name, $new_surname, $new_email, $new_address, $new_country, $new_state, $new_zip, $current_email, $current_password);
 
     $result = $stmt->execute();// Storing select query in a variable
     
@@ -144,7 +139,7 @@ if($object[request_name] == 'logIn'){
 }
 
 //run to insert query
-if($object[request_name] == ''){
+if($object[request_name] == 'test'){
     $stmt = $conn->prepare("INSERT INTO queries (name, email, subject, message) VALUES (?, ?, ?, ?)");
 
     //set Parameters

@@ -181,6 +181,7 @@ if(document.getElementById("login_button")!= null){
 });
 };
 
+//DONE
 //returns suggestions when typing in search bar
 function searchOptions(){
     //Will not show unless something is typed in the search bar
@@ -227,7 +228,7 @@ function searchOptions(){
         };
     }
 };
-
+//DONE
 //sends a query to the server
 function sendQuery(){
     let query = {

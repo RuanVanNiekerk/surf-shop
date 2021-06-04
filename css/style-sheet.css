@@ -118,7 +118,7 @@ img{
 # Sections General
 --------------------------------------------------------------*/
 section {
-  padding: 60px 0;
+  padding-top: 60px;
 }
 
 .section-bg {
@@ -169,6 +169,11 @@ section {
   .section-title span {
     font-size: 38px;
   }
+}
+
+#userPage{
+    padding-top: 75px;
+    min-height: 100vh; 
 }
 
 /*--------------------------------------------------------------
@@ -523,7 +528,6 @@ section {
 }
 
 #footer p {
-  font-size: 15;
   font-style: italic;
   padding: 0;
   margin: 0 0 40px 0;
@@ -549,7 +553,7 @@ section {
 }
 
 #footer .social-links a:hover {
-  background: #f3a200;
-  color: #fff;
+  background: white;
+  color: #F95738;
   text-decoration: none;
 }

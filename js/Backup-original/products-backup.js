@@ -4,6 +4,7 @@ let searchresult = [];
 
 fetchData();
 getCart();
+//DONE
 //fetch product data from api endpoint
 async function fetchData(){
     try{
@@ -22,7 +23,7 @@ async function fetchData(){
         console.log(error);
     };
 };
-
+//DONE
 //fetches searched item at endpoint
 try{
     fetch("php/searchAPI.php/searchResults")
@@ -40,7 +41,7 @@ try{
 }catch(error){
     console.log(error);
 };
-
+//DONE
 //adds product HTML to page
 function prodHTML(index, item = tempProdData, element = "prodCard"){
     if(element == "viewItem"){
@@ -81,7 +82,7 @@ function prodHTML(index, item = tempProdData, element = "prodCard"){
         document.getElementById(element).innerHTML += newHTML;
     }       
 };
-
+//DONE
 //add item to cart
 function cartAdd(prodID){
     for(let i = 0; i <= tempProdData.length; i++){

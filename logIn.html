@@ -11,23 +11,24 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </head>
     <body>
-        <div  id="app">
-            <nav id="homeNav" class="navbar navbar-expand-lg navbar-custom fixed-top">
-                <a class="navbar-brand" href="#">Navbar</a>
+        <div  id="app" class="">
+            <nav id="homeNavAlt" class="navbar navbar-expand-lg navbar-custom fixed-top">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white" class="bi bi-list" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav">
-                        <li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
+                        <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="gallery.html">Products</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contactUs.html">Contact Us</a></li>
                     </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-auto navbar-right">
-                        <input id="searchBar" class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search" onkeyup="searchOptions()">
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    <form class="form-inline my-2 my-lg-0 ml-auto navbar-right" autocomplete="off">
+                        <input id="searchBar" class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search" v-on:keyup="searchOptions()">
+                        <button class="btn-custom my-2 my-sm-0" type="submit">Search</button>
                         <div class="dropdown nav navbar-nav">
                             <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16" >
@@ -38,7 +39,7 @@
                                 <ul id="cartInventory">
                                     <li class="list-group-item d-flex justify-content-between">
                                         <span>Total (USD)</span>
-                                        <strong id="finalTotal">$20</strong>
+                                        <strong id="finalTotal">$0</strong>
                                     </li>
                                 </ul>
                                 <div id="cartCheckout">
@@ -47,27 +48,26 @@
                             </div>
                         </div>
                     </form>
-                    <ul id="accountOptions" class="nav navbar-nav navbar-right">
-                        <li><a href="signUp.html">Sign Up</a></li>
-                        <li><a href="logIn.html">Log In</a></li>
-                    </ul>
+                    <div id="accountOptions" class="nav navbar-nav navbar-right">
+                        
+                    </div>
+                    <login-component></login-component>
                 </div>
             </nav>
             <div id="livesearch"></div>
-            <div class="container-custom">
-                <div class="row-custom">
-                    <div class="col">
-                        Log In Form
-                        <form method="Post">
-                            <label for="login_email">Email:</label><input id="login_email" type="text" name="login_email"/><br/>
-                            <label for="login_password">Password:</label><input id="login_password" type="text" name="login_password"/><br/>
-                            <button v-on:click="sendLoginDetails">Log In</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="row-custom">
-                    <div class="col">
-                        Footer
+            <div class="container px-4 py-5 mx-auto">
+                <div class="d-flex flex-lg-row flex-column-reverse">
+                    <div class="card col-12">
+                        <div class="row justify-content-center my-auto bg-custom">
+                            <div class="col-md-8 col-10 my-5">
+                                <div class="row justify-content-center px-3 mb-3">  </div>
+                                <h3 class="mb-5 text-center heading">Login</h3>
+                                <div class="form-group"> <label class="form-control-label text-muted">Username</label> <input type="text" id="login_email" name="login_email" placeholder="Email address" class="form-control"> </div>
+                                <div class="form-group"> <label class="form-control-label text-muted">Password</label> <input type="password" id="login_password" name="login_password" placeholder="Password" class="form-control"> </div>
+                                <div class="row justify-content-center my-3 px-3"> <button class="btn-custom my-2 my-sm-0" v-on:click="sendLoginDetails">Login</button> </div>
+                                <div class="row justify-content-center my-2"> <a href="#"><small class="text-muted">Forgot Password?</small></a> </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
