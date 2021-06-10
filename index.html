@@ -4,11 +4,7 @@
         <title>Home Page</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        
-        <!-- Favicons -->
-        <link href="assets/img/favicon.png" rel="icon">
-        <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-        
+                
         <link rel="stylesheet" href="css/style-sheet.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -16,8 +12,9 @@
     </head>
     <body>
         <div id="app">
+            <div id="top"></div>
             <!-- Back to top button -->
-            <button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top">
+            <button type="button" class="btn btn-danger btn-floating btn-lg" id="btn-back-to-top" v-on:click="scrollTo('top')">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-up" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z"/>
                 </svg>
@@ -26,7 +23,7 @@
                 <div class="hero-container">
                   <h1>The Kelp Station</h1>
                   <h2>Your local Surf Store</h2>
-                  <a href="#items" class="btn-scroll scrollto" title="Scroll Down">
+                  <a class="btn-scroll scrollto" title="Scroll Down"  v-on:click="scrollTo('items')">
                       <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor" class="bi bi-chevron-down" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
                       </svg>
@@ -43,25 +40,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav">
                         <li class="nav-item active"><a class="nav-link" href="index.html">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" href="gallery.html">Products</a></li>
+                        <li class="nav-item"><a class="nav-link" href="gallery.html" v-on:click='$refs.search.resetSearch()'>Products</a></li>
                         <li class="nav-item"><a class="nav-link" href="about.html">About Us</a></li>
                         <li class="nav-item"><a class="nav-link" href="contactUs.html">Contact Us</a></li>
                     </ul>
-                    <form class="form-inline my-2 my-lg-0 ml-auto navbar-right" autocomplete="off">
-                        <input id="searchBar" class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search" v-on:keyup="searchOptions()">
-                        <button class="btn-custom my-2 my-sm-0" type="submit">Search</button>
+                    <form class="form-inline my-2 my-lg-0 ml-auto navbar-right" autocomplete="off" v-on:submit.prevent=''>
+                        <input id="searchBar" class="form-control mr-sm-2 " type="search" placeholder="Search" aria-label="Search" v-on:keyup="$refs.search.searchOptions()" v-on:keyup.enter="$refs.search.startSearch('submit')">
+                        <button class="btn-custom my-2 my-sm-0" type="submit" v-on:click='$refs.search.startSearch("submit")'>Search</button>
                         <div class="dropdown nav navbar-nav">
-                            <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-on:click="$refs.cart.openCart()">
                             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16" >
                                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </svg>
                             </a>
                             <div id="cartDrop" class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <ul id="cartInventory">
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span>Total (USD)</span>
-                                        <strong id="finalTotal">$0</strong>
-                                    </li>
+                                    <cart-component ref='cart' v-bind:test='test'></cart-component>
                                 </ul>
                                 <div id="cartCheckout">
                                     <a href="checkOut.html" class="btn btn-info" role="button">Check Out</a>
@@ -75,7 +69,9 @@
                     <login-component></login-component>
                 </div>
             </nav>
-            <div id="livesearch"></div>
+            <div id="livesearch">
+                <search-component ref='search'></search-component>
+            </div>
             <div class="row-custom bg-custom pt-5" id="items">
 
                 <div class="col-md-12">
@@ -189,87 +185,66 @@
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 1&amp;font=noto" alt="First slide">
+                            <img class="d-block w-100" src="images/3_6d825ae8-f896-4346-bdfa-050e5d54cc7b_1024x1024@2x.jpg" alt="First slide">
 
                         </div>
                         <!-- Carousel Item 1 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 2&amp;font=noto" alt="Second slide">
+                            <img class="d-block w-100" src="images/43_1024x1024@2x.jpg" alt="Second slide">
 
                         </div>
                         <!-- Carousel Item 2 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 3&amp;font=noto" alt="Third slide">
+                            <img class="d-block w-100" src="images/45_1024x1024@2x.jpg" alt="Third slide">
 
                         </div>
                         <!-- Carousel Item 3 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 4&amp;font=noto" alt="Fourth slide">  
+                            <img class="d-block w-100" src="images/53_1024x1024@2x.jpg" alt="Fourth slide">  
 
                         </div>
                         <!-- Carousel Item 4 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 5&amp;font=noto" alt="Fifth slide">
+                            <img class="d-block w-100" src="images/58_9f193b83-6d49-4ea6-96b6-899d47e65a6a_1024x1024@2x.jpg" alt="Fifth slide">
 
                         </div>
                         <!-- Carousel Item 5 -->
 
                         <div class="carousel-item active">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 6&amp;font=noto" alt="Sixth slide">
+                            <img class="d-block w-100" src="images/61_1024x1024@2x.jpg" alt="Sixth slide">
 
                         </div>
                         <!-- Carousel Item 6 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 7&amp;font=noto" alt="Seventh slide">
+                            <img class="d-block w-100" src="images/72_1024x1024@2x.jpg" alt="Seventh slide">
 
                         </div>
                         <!-- Carousel Item 7 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 8&amp;font=noto" alt="Eighth slide">
+                            <img class="d-block w-100" src="images/85_1024x1024@2x.jpg" alt="Eighth slide">
 
                         </div>
                         <!-- Carousel Item 8 -->
 
                         <div class="carousel-item">
 
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 9&amp;font=noto" alt="Ninth slide">
+                            <img class="d-block w-100" src="images/97_1024x1024@2x.jpg" alt="Ninth slide">
 
                         </div>
                         <!-- Carousel Item 9 -->
-
-                        <div class="carousel-item">
-
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 10&amp;font=noto" alt="Tenth slide">
-
-                        </div>
-                        <!-- Carousel Item 10 -->
-
-                        <div class="carousel-item">
-
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 11&amp;font=noto" alt="Eleventh slide">
-
-                        </div>
-                        <!-- Carousel Item 11 -->
-
-                        <div class="carousel-item">
-
-                            <img class="d-block w-100" src="https://fakeimg.pl/800x400/?retina=1&amp;text=Logo 12&amp;font=noto" alt="Twelveth slide">
-
-                        </div>
-                        <!-- Carousel Item 12 -->
 
                     </div>
 
@@ -303,47 +278,47 @@
             </div>
                     <!-- ======= Our Products Section ======= -->
         <section id="services" class="services bg-custom pb-5">
-          <div class="container">
+            <div class="container">
 
-            <div class="section-title">
-              <h2>Our Products</h2>
-              <p>We are a local supplier of all things Surf. Some of our products include:</p>
-            </div>
-
-            <div class="row">
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div class="icon-box">
-                  <div class="icon"><i class="bx bxl-dribbble"></i></div>
-                  <h4 class="title"><a href="">Surf Boards</a></h4>
-                  <p class="description">Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident</p>
+                <div class="section-title">
+                    <h2>Our Products</h2>
+                    <p>We are a local supplier of all things Surf. Some of our products include:</p>
                 </div>
-              </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div class="icon-box">
-                  <div class="icon"><i class="bx bx-file"></i></div>
-                  <h4 class="title"><a href="">Surf Clothing</a></h4>
-                  <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
-                </div>
-              </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                        <div class="icon-box">
+                            <img class="rounded-circle" src="images/boards.jpg"/>
+                            <h4 class="title mt-2"><a href="">Surfboards</a></h4>
+                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+                        </div>
+                    </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div class="icon-box">
-                  <div class="icon"><i class="bx bx-tachometer"></i></div>
-                  <h4 class="title"><a href="">Board Wax</a></h4>
-                  <p class="description">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>
-                </div>
-              </div>
+                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                        <div class="icon-box">
+                            <img class="rounded-circle" src="images/clothes.jpg"/>
+                            <h4 class="title mt-2"><a href="">Surf Clothing</a></h4>
+                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+                        </div>
+                    </div>
 
-              <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
-                <div class="icon-box">
-                  <div class="icon"><i class="bx bx-world"></i></div>
-                  <h4 class="title"><a href="">Skateboards</a></h4>
-                  <p class="description">At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque</p>
-                </div>
-              </div>
+                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                        <div class="icon-box">
+                            <img class="rounded-circle" src="images/wax.jpg"/>
+                            <h4 class="title mt-2"><a href="">Surf Wax</a></h4>
+                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+                        </div>
+                    </div>
 
-            </div>
+                    <div class="col-md-6 col-lg-3 d-flex align-items-stretch mb-5 mb-lg-0">
+                        <div class="icon-box">
+                            <img class="rounded-circle" src="images/skate.jpg"/>
+                            <h4 class="title mt-2"><a href="">Skateboards</a></h4>
+                            <p class="description">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>
+                        </div>
+                    </div>
+
+              </div>
 
           </div>
         </section><!-- End Our Products Section -->       
@@ -373,18 +348,22 @@
                         </svg>
                     </a>
                 </div>
-            <div class="col-12 p-3 text-center">
-                <div id="map"></div>
+            <div class="col-12 text-center">
+                <div class="m-0 m-sm-5">
+                    <iframe frameborder="0" scrolling="no" marginheight="0" marginwidth="0" id="gmap_canvas" src="https://maps.google.com/maps?width=520&amp;height=400&amp;hl=en&amp;q=1%20Beach%20Road,%20Humewood%20Port%20Elizabeth+()&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe> 
+                    <a href='https://www.add-map.net/'>www.add-map</a> 
+                    <script type='text/javascript' src='https://embedmaps.com/google-maps-authorization/script.js?id=41c1bfa291982c848de1b7765ba24da68888c51d'></script>
+                </div>
             </div>
         </footer><!-- End Footer -->
         </div>
         
         <script src="https://unpkg.com/vue@next"></script>
-        <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC7A-8JlkSLeQq3mSOQ5pSfMbb4-eJouhQ&callback=initMap&libraries=&v=weekly" async></script>-->
         <script src="js/global.js"></script>
-        <script src="js/products.js"></script>
         <!--import components-->
         <script src="js/components/loginOptions.js"></script>
+        <script src="js/components/search.js"></script>
+        <script src="js/components/cart.js"></script>
         <script>
             const mountedApp = app.mount('#app');
         </script>

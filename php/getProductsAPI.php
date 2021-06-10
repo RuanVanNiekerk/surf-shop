@@ -12,13 +12,16 @@ require '../vendor/autoload.php';// This is compulsory for our framework to work
 
 $app = new \Slim\App;// We create an object of the Slim framework main app
 
-// sends all of the searched item to a endpoint
-$app->get('/searchResults', function (Request $request, Response $response, array $args) {
+// sends all of the product info to a endpoint
+$app->get('/products', function (Request $request, Response $response, array $args) {
     require_once 'connectServer.php';// Calling the database connection file
-    //checks if a item has been searched for
-    if(isset($_SESSION["searchedItem"]) && $_SESSION["searchedItem"] != null){
-        $data = $_SESSION["searchedItem"];
-        return json_encode($data);// Translate this array into JSON
+    $query = "select * from products";// SQL query
+    $result = $conn->query($query);
+
+    while ($row = $result->fetch_assoc()){// Loop through each field in the library table
+        $data[] = $row;// Store each field in an array
     }
+    
+    return json_encode($data);// Translate this array into JSON
 });
 $app->run();

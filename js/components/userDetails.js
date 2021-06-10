@@ -19,13 +19,13 @@ app.component('user-component',{
     /*html*/
     `<div>
         <span v-if="cur_name != null && user_form === false">
-            <p>Name: {{cur_name}}<br>
-            Surname: {{cur_surname}}<br>
-            Email: {{cur_email}}<br>
-            Address: {{cur_address}}<br>
-            Country: {{cur_country}}<br>
-            State: {{cur_state}}<br>
-            Zip Code: {{cur_zip}}<br></p>
+            <p><b>Name:</b> {{cur_name}}<br>
+            <b>Surname:</b> {{cur_surname}}<br>
+            <b>Email:</b> {{cur_email}}<br>
+            <b>Address:</b> {{cur_address}}<br>
+            <b>Country:</b> {{cur_country}}<br>
+            <b>State:</b> {{cur_state}}<br>
+            <b>Zip Code:</b> {{cur_zip}}<br></p>
             <button class="btn-custom my-2 my-sm-0" id="changeDetails" v-on:click="userUpdateForm">Change Details</button>
         </span>
         <span v-else-if="user_form === true">
@@ -116,7 +116,7 @@ app.component('user-component',{
                  var OK = 200; // status 200 is a successful return.
                  if (xhr.readyState === DONE) {
                      if (xhr.status === OK) {
-                         window.alert(this.responseText);
+                         document.location.href = "userProfile.html";
                          } else {
                          console.log('Error: ' + xhr.status); // An error occurred during the request.
                          }

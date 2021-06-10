@@ -1,7 +1,8 @@
 const app = Vue.createApp({
     data: function(){
        return{
-            
+            cart: [],
+            cartUpdate: false
        };
     },
     created(){
@@ -14,8 +15,13 @@ const app = Vue.createApp({
             };
             document.addEventListener("scroll", function(){
                 document.getElementById("homeNav").style.display = "initial";
+                document.getElementById("btn-back-to-top").style.display = "initial";
             });
        },
+        //scrolls to destination
+        scrollTo(location){
+            document.getElementById(location).scrollIntoView({behavior: 'smooth'});
+        },
         //Sends the LOG IN form data to be processed on server
         sendLoginDetails(){
                  let formData = {
@@ -69,57 +75,13 @@ const app = Vue.createApp({
                     }
             };
         },
-        //returns suggestions when typing in search bar
-        searchOptions(){
-            //Will not show unless something is typed in the search bar
-            if(document.getElementById("searchBar").value === ""){
-                document.getElementById("livesearch").style.display = "none";
-                document.getElementById("livesearch").innerHTML = "";
-            }else{
-                let search = {
-                    search_input: document.getElementById("searchBar").value,
-                    request_name: 'searchData' 
-                };
-
-                        console.log(search);
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', 'php/server.php');
-                xhr.setRequestHeader("Content-type", "application/json");
-                xhr.send(JSON.stringify(search));
-
-                xhr.onreadystatechange = function () {
-                var DONE = 4; // readyState 4 means the request is done.
-                var OK = 200; // status 200 is a successful return.
-                if (xhr.readyState === DONE) {
-                    if (xhr.status === OK) {
-                        let returnedData = [];
-                        let returnText = "";
-
-                        returnedData = JSON.parse(this.responseText);
-                        for (i = 0; i <= 5; i++) {
-                            console.log(returnedData[i]);
-                        } 
-                        returnedData.forEach(function(item, index){
-                            let submittedEntry = returnedData[index].product_id;
-
-                            returnText += "<a class = 'searchOption' onclick = 'startSearch("+submittedEntry+")'>"+returnedData[index].name+"</a><br/>";
-                            document.getElementById("livesearch").innerHTML = returnText;
-                        });
-
-                        } else {
-                        console.log('Error: ' + xhr.status); // An error occurred during the request.
-                        }
-                    }
-                };
-            }
-        },
         //sends a query to the server
         sendQuery(){
             let query = {
-                name: document.getElementById("name").innerHTML,
-                email: document.getElementById("email").innerHTML,
-                subject: document.getElementById("subject").innerHTML,
-                message: document.getElementById("message").innerHTML,
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                subject: document.getElementById("subject").value,
+                message: document.getElementById("message").value,
                 request_name: 'query' 
             };
 
@@ -135,14 +97,74 @@ const app = Vue.createApp({
                     if (xhr.status === OK) {
                         let returnedData = [];
                         let returnText = "";
-
-                        console.log(JSON.parse(this.responseText));
-                        };
-
+                        
+                        console.log(query);
+                        console.log(this.responseText);
                         } else {
                         console.log('Error: ' + xhr.status); // An error occurred during the request.
                         }
+                    };
                 };
+        },
+        //updates cart when a new item is added
+        updateCart(curItem){
+            let item = curItem;
+            if(this.cart === null){
+                this.cart = item;
+            }else{
+                this.cart.push(item);
+            }
+            
+            console.log(this.cart);
+            
+            //send updated cart to server session
+            let data = {
+                cartInv: this.cart,
+                request_name: 'updateCart' 
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "php/cart.php");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.send(JSON.stringify(data));
+
+            xhr.onreadystatechange = () => {
+                var DONE = 4; // readyState 4 means the request is done.
+                var OK = 200; // status 200 is a successful return.
+                if (xhr.readyState === DONE) {
+                    if (xhr.status === OK) {
+                        console.log(xhr.responseText);
+                        } else {
+                        console.log('Error: ' + xhr.status); // An error occurred during the request.
+                        }
+                    }
+            };
+            
+                        this.cartUpdate = true;
+        },
+        submitCart(){
+            //send updated cart to server session
+            let data = {
+                request_name: 'submitCart' 
+            };
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "php/cart.php");
+            xhr.setRequestHeader("Content-type", "application/json");
+            xhr.send(JSON.stringify(data));
+
+            xhr.onreadystatechange = () => {
+                var DONE = 4; // readyState 4 means the request is done.
+                var OK = 200; // status 200 is a successful return.
+                if (xhr.readyState === DONE) {
+                    if (xhr.status === OK) {
+                        console.log(xhr.responseText);
+                        } else {
+                        console.log('Error: ' + xhr.status); // An error occurred during the request.
+                        }
+                    }
+            };
         }
+        
    }
 });

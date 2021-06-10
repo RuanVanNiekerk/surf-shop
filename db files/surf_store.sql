@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 28, 2021 at 05:45 AM
+-- Generation Time: Jun 10, 2021 at 09:46 PM
 -- Server version: 5.7.24
 -- PHP Version: 7.4.1
 
@@ -42,6 +42,18 @@ CREATE TABLE `address` (
 
 INSERT INTO `address` (`user_id`, `address`, `country`, `state`, `zip`) VALUES
 (11, 'test', 'test', 'test', 1010);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `order_id` int(244) NOT NULL,
+  `product_order_ids` varchar(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -86,8 +98,16 @@ CREATE TABLE `queries` (
   `name` varchar(244) NOT NULL,
   `email` varchar(244) NOT NULL,
   `subject` varchar(244) NOT NULL,
-  `message` varchar(244) NOT NULL
+  `message` varchar(244) NOT NULL,
+  `user_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `queries`
+--
+
+INSERT INTO `queries` (`query_id`, `name`, `email`, `subject`, `message`, `user_id`) VALUES
+(2, 'Ruan van Niekerk', 'ruanvanniekerk3@gmail.com', 'test', 'w', 11);
 
 -- --------------------------------------------------------
 
@@ -119,7 +139,14 @@ INSERT INTO `users` (`user_id`, `name`, `surname`, `email`, `password`) VALUES
 -- Indexes for table `address`
 --
 ALTER TABLE `address`
-  ADD PRIMARY KEY (`user_id`);
+  ADD UNIQUE KEY `user_id` (`user_id`) USING BTREE;
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `products`
@@ -131,7 +158,8 @@ ALTER TABLE `products`
 -- Indexes for table `queries`
 --
 ALTER TABLE `queries`
-  ADD PRIMARY KEY (`query_id`);
+  ADD PRIMARY KEY (`query_id`),
+  ADD UNIQUE KEY `user_id` (`user_id`) USING BTREE;
 
 --
 -- Indexes for table `users`
@@ -144,16 +172,50 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `order_id` int(244) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
   MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `queries`
+--
+ALTER TABLE `queries`
+  MODIFY `query_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `address`
+--
+ALTER TABLE `address`
+  ADD CONSTRAINT `address_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Constraints for table `queries`
+--
+ALTER TABLE `queries`
+  ADD CONSTRAINT `queries_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
