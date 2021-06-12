@@ -68,6 +68,29 @@ body{
   
 }
 
+@media (max-width: 991px) {
+    #livesearch, #cartDrop{
+        top: 20px;
+        border-radius: 10px;
+  }
+}
+
+@media (max-width: 881px) {
+    #livesearch, #cartDrop{
+        top: 306px;
+        right: 20px;
+        left: 20px;
+        border-radius: 10px;
+        width: auto;
+  }
+}
+
+@media (max-width: 575px) {
+    #livesearch, #cartDrop{
+        top: 360px;
+  }
+}
+
 .container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl {
     width: 100%;
     padding-right: 15px;
