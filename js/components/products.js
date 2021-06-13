@@ -43,7 +43,7 @@ app.component('items-component',{
                         <h4 class="mr-1">\${{ViewItem.price}}</h4>
                     </div>
                     <h6 class="text-success">Free shipping</h6>
-                    <div class="d-flex flex-column mt-4"><button class="btn-custom my-2 my-sm-0" type="button" v-bind:id="ViewItem.product_id" v-on:click="addCart(ViewItem.product_id) v-on:click="addCart(item.product_id)"">Add to Cart</button>
+                    <div class="d-flex flex-column mt-4"><button class="btn-custom my-2 my-sm-0" type="button" v-bind:id="ViewItem.product_id" v-on:click="addCart(ViewItem.product_id)">Add to Cart</button>
                 </div>
             </div>
         </span>
